@@ -1,0 +1,28 @@
+% ----------------------------------------------------------------
+% Lorenzo Cano
+% Carlos Tierno
+% ----------------------------------------------------------------
+
+%% Exercise 1: 
+% Obtain the homogeneous matrices that transform a reference system
+% according to the following basic movements (all expressed in the original
+% reference system).
+
+    % Rotation of 90º on the Y axis, followed by a translation of 10 units on the X
+    % axis.
+
+T = troty(pi/2) * transl(10,0,0);
+msg = "90º rotation along Y followed by tranlsation of 10 along X:\n";
+disp(msg);disp(T);
+
+    % Translation of 10 on the X axis, followed by a 90º rotation on the Y axis
+
+T =  transl(10,0,0) * troty(pi/2);
+msg = "Tranlsation of 10 along X followed by 90º rotation along Y :\n";
+disp(msg);disp(T);
+
+    % Compare both transformations. Interpret the differences considering both the
+    % translation and the rotation parts.
+%% Exercise 2:
+
+% 
