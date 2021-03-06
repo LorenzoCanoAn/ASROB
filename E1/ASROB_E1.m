@@ -7,6 +7,7 @@
 % Obtain the homogeneous matrices that transform a reference system
 % according to the following basic movements (all expressed in the original
 % reference system).
+fprintf("----------------------------------------------------\n");
 disp("EXERCISE 1\n");
     % Rotation of 90º on the Y axis, followed by a translation of 10 units on the X
     % axis.
@@ -42,6 +43,7 @@ fprintf(answer);
 %% Exercise 2:
 % Compute and compare the following two transformations. Compare the
 % results as well with the results of 1):
+fprintf("----------------------------------------------------\n");
 fprintf("\nEXERCISE 2\n")
 
     % Rotation of 90º on the Y axis, followed by a translation of 10 on the X axis of
@@ -71,6 +73,7 @@ answer =   strcat(...
 fprintf(answer);
     
 %% Exercise 3:
+fprintf("----------------------------------------------------\n");
 fprintf("\n EXERCISE 3\n");
 T_c_o = [   0,  1,  0,  1;  ...
             1,  0,  0,  10; ...
@@ -125,18 +128,57 @@ disp(T_c_o);
 
     
 %% Exercise 4:
-% Obtain the rotation matrix associated with:
-
+fprintf("----------------------------------------------------\n");
+fprintf("EXERCISE 4\n");
 
 
     % a) Three Euler angles (45º, 0, 15º). Compare it against the rotation matrix
     % associated with Euler angles (60º, 0, 0). What is happening? How do
     % you explain this?
     
+    R_1 = rotx(45,'angle') * rotz(15,'angle');
+    
+    fprintf("\n\nR(45,0,15)\n");
+    disp(R_1);
+    
+    
+    R_2 = rotx(60,'angle');
+    
+    fprintf("\n\nR(60,0,0)\n");
+    disp(R_2);
+    
+    fprintf("Hay que escribir algo aqui pero no tengo ni idea de que quiere\n");
     
     % b) Compute the RPY angles associated with the previous cases. 
+    
+    rpy_1 = tr2rpy(R_1);
+    fprintf("\n\nRPY R(45,0,15)\n");
+    disp(rpy_1);
+    
+    rpy_2 = tr2rpy(R_2);
+    fprintf("\n\nRPY R(60,0,0)\n");
+    disp(rpy_2)
+    
 
 %% Exercise 5:
+fprintf("----------------------------------------------------\n");
+fprintf("EXERCISE 5\n");
+
+    % Obtain the rotation matrix associated with:
+    T_c_o = [   0,  1,  0,  1;  ...
+                1,  0,  0,  10; ...
+                0,  0,  -1, 0;  ...
+                0,  0,  0,  1;  ];
+
+    T_c_b = [   1,  0,  0,  1;  ...
+                0,  -1, 0,  20; ...
+                0,  0,  -1, 10; ...
+                0,  0,  0,  1   ];
+        % a) Compute the location of the object relative to the robot base, BTO
+    T_b_c = eye(size(T_c_b))/T_c_b;
+    T_b_o =  T_b_c * T_c_o;
+
+
 % The center of the robot's gripper (G) is initially located at the same height
 % from the ground as the base reference (B), but with an orientation of 45º
 % measured on the X axis of that reference, and at a distance measured
@@ -146,15 +188,38 @@ disp(T_c_o);
     % of the gripper relative to the base. Obtain the location vector BxG=(x,y,z,
     % φ,θ,ψ), expressing the orientation in Euler angles.
     
+    T_b_g = transl(0,10,0) * trotx(pi/4);
+    xBxG = T_b_g*[0 0 0 1]';
+    x_eul_b_g = [xBxG(1:3)' tr2rpy(T_b_g)];
+    
+    fprintf("The location vector of G refernced to B (x,y,z,fi,theta,psi):\n");
+    disp(x_eul_b_g)
+    
     
     % b) What movement must the robot's gripper make (translation and rotation)
     % to pick up the object O that is on the table? Express it as a sequence of
     % translations and rotations, as a homogeneous matrix, and as a location
     % vector with RPY angles.
+
+    T_g_o = T_b_g \ T_b_o;
+    
+    fprintf("Gripper movement as homogeneous matrix: \n");
+    disp(T_g_o);
+    
+    fprintf("As a sequence of translation and rotations:\n");
+    fprintf("Translation:\n");
+    t_g_o = T_g_o*[0 0 0 1]';
+    
+    disp(t_g_o(1:3));
+    fprintf("Rotation:");
+    r_g_o = tr2eul(T_g_o);
+    disp(r_g_o);
+    
+    
+    
     
     % c) What movement (translation and rotation) will observe the camera?
+    tr2eul(T_g_o)
+    T_g_o*[0 0 0 1]'
     
-%% Exercise 6:
-% Represent the robot’s gripper (G) at the initial and final
-% positions when the robot is going to pick up the object, as seen from the
-% camera. Represent the object by using a 3D cube.
+
