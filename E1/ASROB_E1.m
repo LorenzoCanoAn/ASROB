@@ -136,18 +136,20 @@ fprintf("EXERCISE 4\n");
     % associated with Euler angles (60º, 0, 0). What is happening? How do
     % you explain this?
     
-    R_1 = rotx(45,'angle') * rotz(15,'angle');
+    R_1 = rotz(45,'deg') * rotz(15,'deg');
     
     fprintf("\n\nR(45,0,15)\n");
     disp(R_1);
     
     
-    R_2 = rotx(60,'angle');
+    R_2 = rotz(60,'deg');
     
     fprintf("\n\nR(60,0,0)\n");
     disp(R_2);
     
-    fprintf("Hay que escribir algo aqui pero no tengo ni idea de que quiere\n");
+    fprintf("Assuming the euler angles follow the convention ZYZ, the result \n"...
+            +"must be and is the same, as we are applying 45 and 15 degree following rotations \n"...
+            +"over the same axis. Which is the same as the sum of them.\n");
     
     % b) Compute the RPY angles associated with the previous cases. 
     
@@ -164,6 +166,7 @@ fprintf("EXERCISE 4\n");
 fprintf("----------------------------------------------------\n");
 fprintf("EXERCISE 5\n");
 
+
     % Obtain the rotation matrix associated with:
     T_c_o = [   0,  1,  0,  1;  ...
                 1,  0,  0,  10; ...
@@ -174,10 +177,28 @@ fprintf("EXERCISE 5\n");
                 0,  -1, 0,  20; ...
                 0,  0,  -1, 10; ...
                 0,  0,  0,  1   ];
+    
+            
+            
+     T0 = transl(0,0,0);
+     [t_o_1, rt_o_1] = get_tR(T0);
+     q_t_o1 = quaternion(rt_o_1,'rotmat','frame');
+     plotTransforms(t_o_1',q_t_o1);
+     hold on;
+                
+    [t_c_b_1, rt_c_b_1] = get_tR(T_c_b);
+    q_t_c_b1 = quaternion(rt_c_b_1,'rotmat','frame');
+            
+     plotTransforms(t_c_b_1',q_t_c_b1);
+    
+     axis square;
+    
+    
         % a) Compute the location of the object relative to the robot base, BTO
-    T_b_c = eye(size(T_c_b))/T_c_b;
-    T_b_o =  T_b_c * T_c_o;
+     T_b_c = eye(size(T_c_b))/T_c_b;
+     T_b_o =  T_b_c * T_c_o;
 
+    
 
 % The center of the robot's gripper (G) is initially located at the same height
 % from the ground as the base reference (B), but with an orientation of 45º
@@ -194,6 +215,13 @@ fprintf("EXERCISE 5\n");
     
     fprintf("The location vector of G refernced to B (x,y,z,fi,theta,psi):\n");
     disp(x_eul_b_g)
+    
+    
+    T_c_g = T_c_b * T_b_g;
+    [T_c_g_1, rT_c_g_1] = get_tR(T_c_g);
+    q_T_c_g1 = quaternion(rT_c_g_1,'rotmat','frame');
+            
+    plotTransforms(T_c_g_1',q_T_c_g1);
     
     
     % b) What movement must the robot's gripper make (translation and rotation)
@@ -219,7 +247,23 @@ fprintf("EXERCISE 5\n");
     
     
     % c) What movement (translation and rotation) will observe the camera?
-    tr2eul(T_g_o)
-    T_g_o*[0 0 0 1]'
+      T_c_g = T_c_b * T_b_g;
+      t_c_g_o = get_t(T_c_g) - get_t(T_c_o);
+      
+      fprintf("Finally the translation observed by the camera is the result  \n" ...
+          + "of substracting the camera-gripper translation vector from  \n" ...
+          + "the camera-object translation vector \n")
+      
+      disp(t_c_g_o);
     
-
+%%
+function t = get_t(T)
+    t = T(1:3,4);
+end
+function R = get_R(T)
+    R = T(1:3,1:3);
+end
+function [t,R] = get_tR(T)
+    t = get_t(T);
+    R = get_R(T);
+end
