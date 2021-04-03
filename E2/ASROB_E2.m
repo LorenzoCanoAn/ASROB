@@ -33,11 +33,13 @@ T_B_A_b = inv(T_ab_a);
 
 T_ab_a_1 = T_ab_a;
 T_ab_a = transl(2,7,3)*trotz(pi)*trotx(pi/2);
+
 if all(T_ab_a_1 == T_ab_a)
     clear T_ab_a_1
 else
     error("They are different")
 end
+
 T_inter_0 = transl(0,0,0);
 [t_inter_0, R_inter_0] = get_tR(T_inter_0);
 q_inter_0 = quaternion(R_inter_0,'rotmat','frame');
@@ -94,6 +96,74 @@ e_ac_a = rotm2eul(get_R(T_ac_a));
 x_ac_a = [t_ac_a',e_ac_a];
 disp(x_ac_a)
 
+%% 3rd Exercise
+
+%%  Structure with 2 joints:
+
+% Elements that define a link: 
+% DH parameters: 
+%   sigma (==0 rotat., == 1 transl.),
+%   offset: if we want to include an initial offset for the joint 
+%           [theta,D,A,alpha,sigma,offset]
+
+
+%% A  
+l1 = 2;
+l2 = 4;
+
+L1 = Revolute('d',0,'a',0,'alpha',pi/2,'offset',30*pi/180); % DH parameters for 0T1
+L2 = Prismatic(); %  DH parameters for 1T2
+
+
+% Set limits for the joint
+L2.qlim = [0 15];
+% Construction of an object belonging to the class robot
+my_arm=SerialLink([L1,L2],'name', 'robot1');
+% Location of the base reference frame
+my_arm.base=transl(0,2,0)*trotx(-pi/2);
+% Visualization of the robot in the joint position given by qr
+qr=[0, 2];
+plot(my_arm,qr)
+% Visualization of the robot and manual guidance of the different joints, starting from
+% the initial joint position qr
+teach(my_arm,qr)
+
+%% B
+
+L1 = Revolute('a',1,'alpha',0,'offset',-20*pi/180); % DH parameters for 0T1
+L2 = Revolute('a',2,'alpha',0,'offset',220*pi/180); %  DH parameters for 1T2
+
+
+% Set limits for the joint
+L2.qlim = [0 15];
+% Construction of an object belonging to the class robot
+my_arm=SerialLink([L1,L2],'name', 'robot1');
+% Location of the base reference frame
+my_arm.base=transl(0,2,0)*trotx(-pi/2);
+% Visualization of the robot in the joint position given by qr
+qr=[0, 2];
+plot(my_arm,qr)
+% Visualization of the robot and manual guidance of the different joints, starting from
+% the initial joint position qr
+teach(my_arm,qr)
+
+%% C
+L1 = Revolute('a',0,'alpha',pi/2); % DH parameters for 0T1
+L2 = Revolute('a',2,'alpha',0,'offset',pi+pi/4); %  DH parameters for 1T2
+
+
+% Set limits for the joint
+L2.qlim = [0 15];
+% Construction of an object belonging to the class robot
+my_arm=SerialLink([L1,L2],'name', 'robot1');
+% Location of the base reference frame
+my_arm.base=transl(0,2,0)*trotx(pi);
+% Visualization of the robot in the joint position given by qr
+qr=[0, 2];
+plot(my_arm,qr)
+% Visualization of the robot and manual guidance of the different joints, starting from
+% the initial joint position qr
+teach(my_arm,qr)
 
 
 %% Functions
