@@ -13,10 +13,10 @@ i_hip_rot = Revolute('a',0,'alpha',pi/2,'qlim',[0 pi/2]); % DH parameters for 0T
 i_hip_ad = Revolute('a',0,'alpha',pi/2,'qlim',[-pi/2,pi],'offset',pi/2);
 i_hip_flx = Revolute('a',2,'alpha',0,'qlim',[-pi pi],'offset',-pi);
 
-i_knee = Revolute('a',2,'alpha',pi/2,'qlim',[pi 2*pi]);
+i_knee = Revolute('a',2,'alpha',0,'qlim',[pi 2*pi]);
 
 i_ankle_inv = Revolute('a',0,'alpha',-pi/2,'qlim',[-pi/2 30*pi/180], 'offset',pi/2);
-i_ankle_ext = Revolute('a',1,'alpha',0,'qlim',[-pi/2 pi/2],'offset',pi/2);
+i_ankle_ext = Revolute('a',1,'alpha',0,'qlim',[-pi/2 pi/2],'offset',0);
 
 izq_leg=SerialLink([i_hip_rot,i_hip_ad,i_hip_flx,i_knee,i_ankle_inv,i_ankle_ext],'name', 'izqda_leg');
 il_qr=[0, 0, 0, 0, 0, 0];
@@ -32,10 +32,10 @@ d_hip_rot = Revolute('a',0,'alpha',pi/2,'qlim',[-pi/2 0],'offset', 0); % DH para
 d_hip_ad = Revolute('a',0,'alpha',pi/2,'qlim',[-pi/2,pi],'offset',pi/2);
 d_hip_flx = Revolute('a',2,'alpha',0,'qlim',[-pi pi],'offset',-pi);
 
-d_knee = Revolute('a',2,'alpha',pi/2,'qlim',[pi 2*pi]);
+d_knee = Revolute('a',2,'alpha',0,'qlim',[pi 2*pi]);
 
 d_ankle_inv = Revolute('a',0,'alpha',-pi/2,'qlim',[-pi/2 30*pi/180], 'offset',pi/2);
-d_ankle_ext = Revolute('a',1,'alpha',0,'qlim',[-pi/2 pi/2],'offset',pi/2);
+d_ankle_ext = Revolute('a',1,'alpha',0,'qlim',[-pi/2 pi/2],'offset',0);
 
 dcha_leg=SerialLink([d_hip_rot,d_hip_ad,d_hip_flx,d_knee,d_ankle_inv,d_ankle_ext],'name', 'dcha_leg');
 dl_qr=[0, 0, 0, 0, 0, 0];
@@ -87,116 +87,113 @@ teach(dcha_arm,da_qr)
 %init   #arm forward
 q_arm_ii = ia_qr;
 q_arm_if = [0,pi/4,-pi/10,pi/4,0,-pi/2,0];
-q_arm_i_e=jtraj(q_arm_ii,q_arm_if,10);  
+q_arm_i_e=jtraj(q_arm_ii,q_arm_if,20);  
 
 
 
 q_arm_di = da_qr;
 q_arm_df = [0,pi/4,pi/10,pi/4,0,-pi/2,0];
-q_arm_d_e=jtraj(q_arm_di,q_arm_df,10);
+q_arm_d_e=jtraj(q_arm_di,q_arm_df,20);
 
 
 %       #arm backwards
 q_arm_ii = q_arm_if;
 q_arm_if = [0,-pi/4,pi/10,0,0,-pi/2,0];
-q_arm_i_e=[q_arm_i_e;jtraj(q_arm_ii,q_arm_if,10)];  
+q_arm_i_e=[q_arm_i_e;jtraj(q_arm_ii,q_arm_if,30)];  
  
 
 
 q_arm_di = q_arm_df;
 q_arm_df = [0,-pi/4,-pi/10,0,0,-pi/2,0];
-q_arm_d_e=[q_arm_d_e;jtraj(q_arm_di,q_arm_df,10)];  
+q_arm_d_e=[q_arm_d_e;jtraj(q_arm_di,q_arm_df,30)];  
 
 
 
 %       #arm top
 q_arm_ii = q_arm_if;
 q_arm_if = [pi/12,pi-pi/10,pi/4,0,-pi/2,-pi/2,0];
-q_arm_i_e=[q_arm_i_e;jtraj(q_arm_ii,q_arm_if,15)];  
+q_arm_i_e=[q_arm_i_e;jtraj(q_arm_ii,q_arm_if,40)];  
 
 
 q_arm_di = q_arm_df;
 q_arm_df = [0,pi-pi/10,0,0,0,-pi/2,0];
-q_arm_d_e=[q_arm_d_e;jtraj(q_arm_di,q_arm_df,15)];  
+q_arm_d_e=[q_arm_d_e;jtraj(q_arm_di,q_arm_df,40)];  
 
 %       #spike
 
 q_arm_ii = q_arm_if;
-q_arm_i_e=[q_arm_i_e;jtraj(q_arm_ii,q_arm_if,3)];
+q_arm_i_e=[q_arm_i_e;jtraj(q_arm_ii,q_arm_if,9)];
 
 q_arm_ii = q_arm_if;
 q_arm_if = [0,0,0,0,0,-pi/2,0];
-q_arm_i_e=[q_arm_i_e;jtraj(q_arm_ii,q_arm_if,5)];  
+q_arm_i_e=[q_arm_i_e;jtraj(q_arm_ii,q_arm_if,15)];  
 
 
 
 q_arm_di = q_arm_df;
 q_arm_df = [0,0,0,0,0,-pi/2,0];
-q_arm_d_e=[q_arm_d_e;jtraj(q_arm_di,q_arm_df,5)];  
+q_arm_d_e=[q_arm_d_e;jtraj(q_arm_di,q_arm_df,15)];  
 q_arm_di = q_arm_df;
-q_arm_d_e=[q_arm_d_e;jtraj(q_arm_di,q_arm_df,3)];  
+q_arm_d_e=[q_arm_d_e;jtraj(q_arm_di,q_arm_df,9)];  
 
 
 %% LEGS Dynamics
  
 q_leg_ii = il_qr;
-q_leg_if = [0,0,0,-pi/5,0,-pi/7];
-q_leg_i_e=jtraj(q_leg_ii,q_leg_if,10);  
+q_leg_if = [0,0,0,-pi/5,-pi/7,0];
+q_leg_i_e=jtraj(q_leg_ii,q_leg_if,30);  
 
 q_leg_ii = q_leg_if;
 q_leg_if = [0,0,pi/4,0,0,0,];
-q_leg_i_e=[q_leg_i_e;jtraj(q_leg_ii,q_leg_if,5)];  
+q_leg_i_e=[q_leg_i_e;jtraj(q_leg_ii,q_leg_if,10)];  
 
 
 q_leg_ii = q_leg_if;
 q_leg_if = [0,0,0,0,0,0,];
-q_leg_i_e=[q_leg_i_e;jtraj(q_leg_ii,q_leg_if,5)];  
+q_leg_i_e=[q_leg_i_e;jtraj(q_leg_ii,q_leg_if,10)];  
 
 q_leg_ii = q_leg_if;
-q_leg_if =[0,0,pi/5,-pi/5,0,-pi/7];
-q_leg_i_e=[q_leg_i_e;jtraj(q_leg_ii,q_leg_if,5)];  
+q_leg_if =[0,0,pi/5,-pi/5,-pi/7,0];
+q_leg_i_e=[q_leg_i_e;jtraj(q_leg_ii,q_leg_if,15)];  
 
 q_leg_ii = q_leg_if;
-q_leg_if =[0,0,0,0,0,-pi/2];
-q_leg_i_e=[q_leg_i_e;jtraj(q_leg_ii,q_leg_if,2)];  
+q_leg_if =[0,0,0,0,-pi/2,0];
+q_leg_i_e=[q_leg_i_e;jtraj(q_leg_ii,q_leg_if,8)];  
  
 
 q_leg_di = il_qr;
 q_leg_df = [0,0,pi/4,0,0,0,];
-q_leg_d_e=jtraj(q_leg_di,q_leg_df,10);  
+q_leg_d_e=jtraj(q_leg_di,q_leg_df,30);  
 
 q_leg_di = q_leg_df;
 
-q_leg_df = [0,0,0,0,-1,0,];
-q_leg_d_e=[q_leg_d_e;jtraj(q_leg_di,q_leg_df,10)];  
+q_leg_df = [0,0,0,0,0,0];
+q_leg_d_e=[q_leg_d_e;jtraj(q_leg_di,q_leg_df,20)];  
 
 q_leg_di = q_leg_df;
-q_leg_df = [0,0,pi/5,-pi/5,0,-pi/7];
-q_leg_d_e=[q_leg_d_e;jtraj(q_leg_di,q_leg_df,5)];
+q_leg_df = [0,0,pi/5,-pi/5,-pi/7,0];
+q_leg_d_e=[q_leg_d_e;jtraj(q_leg_di,q_leg_df,15)];
 
 q_leg_di = q_leg_df;
-q_leg_df = [0,0,0,0,0,-pi/2];
-q_leg_d_e=[q_leg_d_e;jtraj(q_leg_di,q_leg_df,2)];
+q_leg_df = [0,0,0,0,-pi/2,0];
+q_leg_d_e=[q_leg_d_e;jtraj(q_leg_di,q_leg_df,8)];
 
-for i = 1:43
-    if i <= 27
+
+%%
+len_l = size(q_leg_i_e);
+len_a = size(q_arm_i_e);
+anim = Animate('movie.mp4');
+for i = 1:max(len_l(1),len_a(1))
+    if i <= len_l(1)
         izq_leg.animate(q_leg_i_e(i,:));
         dcha_leg.animate(q_leg_d_e(i,:));
     end
-    izq_arm.animate(q_arm_i_e(i,:));
-    dcha_arm.animate(q_arm_d_e(i,:));
+    if i <= len_a(1)
+        izq_arm.animate(q_arm_i_e(i,:));
+        dcha_arm.animate(q_arm_d_e(i,:));
+    end
+    anim.add()
 end
+anim.close()
 
-
-
-%%
-
-
-for i = 1:43
-end
-
-%%
-
-
-%%
 
